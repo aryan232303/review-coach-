@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Review Coach for restaurant partners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F4F0;--surface:#FFFFFF;--ink:#1C2520;--muted:#5B685F;--line:#D9E0D8;--accent:#E8700A;--accent-ink:#FFFFFF;--bad:#B23B25;--good:#2C7A4B;--warn-bg:#FBE9E4;--bar:#E9C9A8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141A16;--surface:#1D2620;--ink:#E7EEE8;--muted:#9AA99F;--line:#2D3A31;--accent:#F59A44;--accent-ink:#1A1208;--bad:#F08A73;--good:#6FCB93;--warn-bg:#3A1F19;--bar:#5A4630}}
+:root[data-theme="dark"]{--bg:#141A16;--surface:#1D2620;--ink:#E7EEE8;--muted:#9AA99F;--line:#2D3A31;--accent:#F59A44;--accent-ink:#1A1208;--bad:#F08A73;--good:#6FCB93;--warn-bg:#3A1F19;--bar:#5A4630}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Public Sans",system-ui,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 18px 56px}
+h1,h2,h3{font-family:"Bricolage Grotesque",Georgia,serif;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,5vw,42px);font-weight:700;max-width:18ch}
+.sub{color:var(--muted);max-width:60ch;margin:10px 0 26px}
+.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:22px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+label{font-weight:600;font-size:14px;display:block;margin-bottom:6px}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:9px 10px}
+textarea{min-height:300px;resize:vertical;font-size:14px;line-height:1.5}
+.hint{font-size:13px;color:var(--muted);margin:6px 0 12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button{font:600 14px "Public Sans",sans-serif;border-radius:6px;padding:10px 16px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.digest{font-size:17px;margin:0 0 18px}
+.fix{display:grid;grid-template-columns:1fr;gap:4px;padding:14px 0;border-top:1px solid var(--line)}
+.fix:first-of-type{border-top:0}
+.fix h3{font-size:19px}
+.meta{font-size:13px;color:var(--muted)}
+.bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:5px;transition:width .5s}
+.quote{font-size:14px;color:var(--muted);border-left:3px solid var(--bar);padding-left:10px;margin-top:4px}
+.praise{margin-top:14px;font-size:14px;color:var(--good);font-weight:500}
+.rev{border-top:1px solid var(--line);padding:16px 0}
+.rev:first-child{border-top:0}
+.rv-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.stars{font-weight:600;color:var(--accent)}
+.tag{font-size:12px;border:1px solid var(--line);border-radius:20px;padding:1px 9px;color:var(--muted)}
+.flag{background:var(--warn-bg);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:14px;color:var(--bad);font-weight:500}
+.rv-text{margin:6px 0 8px}
+.rev textarea{min-height:84px;font-size:14px}
+.rev.done textarea{opacity:.6}
+.tabs{display:flex;gap:8px;margin:0 0 6px}
+.tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.foot{margin-top:28px;font-size:13px;color:var(--muted);max-width:70ch}
+.empty{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Review Coach</h1>
+  <p class="sub">Paste a restaurant’s recent reviews. Get the three fixes most likely to lift its rating, plus ready-to-send replies the owner can approve in one tap.</p>
+
+  <div class="grid">
+    <section class="panel" aria-labelledby="in-h">
+      <h2 id="in-h" style="font-size:20px;margin-bottom:12px">Reviews</h2>
+      <label for="rest">Restaurant name</label>
+      <input type="text" id="rest" value="Spice Route Kitchen">
+      <label for="revs" style="margin-top:14px">One review per line</label>
+      <textarea id="revs" spellcheck="false"></textarea>
+      <p class="hint">Start a line with a rating and a bar, like <b>2 | Food arrived cold</b>. No rating? It counts as 3.</p>
+      <div class="row">
+        <button class="primary" id="go">Analyse reviews</button>
+        <button id="sample">Reload sample</button>
+      </div>
+    </section>
+
+    <div>
+      <section class="panel" aria-live="polite">
+        <h2 style="font-size:20px;margin-bottom:12px">This week’s top fixes</h2>
+        <div id="out"><p class="empty">Press “Analyse reviews” to see what customers are asking you to fix.</p></div>
+      </section>
+      <section class="panel" style="margin-top:22px">
+        <h2 style="font-size:20px;margin-bottom:10px">Replies to approve</h2>
+        <div class="tabs" role="group" aria-label="Filter replies">
+          <button id="tab-need" aria-pressed="true">Needs a reply</button>
+          <button id="tab-all" aria-pressed="false">All reviews</button>
+        </div>
+        <div id="replies"><p class="empty">Replies appear here after you analyse.</p></div>
+      </section>
+    </div>
+  </div>
+
+  <p class="foot">Prototype note: themes here come from keyword rules so the demo runs without any server. In the full product, an LLM reads the reviews on a weekly schedule, grades its own confidence, auto-drafts the safe replies and sends anything risky, such as food-safety complaints, to a person.</p>
+</div>
+
+<script>
+var SAMPLE = [
+"1 | Ordered biryani, the box leaked and the raita spilled all over the bag. Packaging is terrible.",
+"2 | Delivery took almost 80 minutes and the food was lukewarm when it arrived.",
+"5 | Best paneer tikka in the area, tasty and fresh. Loved it!",
+"2 | Very small portion for the price. Overpriced for the quantity.",
+"3 | Taste is good but the rice was cold and the delivery was late.",
+"1 | Found a hair in my dal. Really disgusting.",
+"4 | Delicious butter chicken, a little oily though.",
+"2 | They forgot my naan and the raita. Missing items again!",
+"1 | Packing was careless, curry leaked out of the container and the bag was soggy.",
+"5 | Amazing flavours, perfect spice level. Will order again.",
+"3 | Good food but too slow, waited over an hour.",
+"2 | Portion is tiny compared to last month. Quantity has gone down.",
+"4 | Tasty and fresh, though the gravy had leaked into the bag a bit.",
+"2 | Food arrived cold and the delivery was delayed by 50 minutes."
+].join("\n");
+
+var THEMES = [
+ {k:"packaging", name:"Leaky or careless packaging", re:/\b(leak\w*|spill\w*|soggy|packag\w+|packing|container|box)\b/i,
+  tip:"Switch to sealed, leak-proof containers for gravies and raita, and pack sides in separate lidded cups.",
+  reply:"We’re sorry your order was packed badly. Leaks and spills are not what we want you to open. We are moving to sealed containers for gravies and sides, and we would love a chance to make it right."},
+ {k:"delivery", name:"Slow delivery", re:/\b(late|delay\w*|slow|waited|wait|took\s+(almost|over|more)|minutes|hour)\b/i,
+  tip:"Mark prep time honestly in peak hours and pause long-prep dishes when the kitchen is backed up.",
+  reply:"Thank you for telling us about the wait. We know a long delivery spoils a meal. We are tightening our prep times during busy hours so your food reaches you sooner."},
+ {k:"temp", name:"Food arriving cold", re:/\b(cold|lukewarm|not hot|warm only)\b/i,
+  tip:"Seal food while hot, use insulated bags for long routes, and hand over orders as soon as they are ready.",
+  reply:"We’re sorry your food was not hot when it reached you. We are packing orders straight from the stove and handing them over faster so the heat stays in."},
+ {k:"portion", name:"Portion size and value", re:/\b(small portion|tiny|portion|quantity|overpriced|expensive|costly|not worth|less food)\b/i,
+  tip:"Check portion weights against your menu photos, or reprice. Customers notice when value slips.",
+  reply:"Thanks for being honest about the portion. We are reviewing our serving sizes so that every order feels worth what you paid."},
+ {k:"missing", name:"Missing items", re:/\b(forgot|missing|not included|did not get|didn’t get|didn't get|left out)\b/i,
+  tip:"Add a checklist step at the pass: tick every item against the order before sealing the bag.",
+  reply:"We’re sorry we missed an item in your order. We are adding a final check before every bag is sealed so this does not happen again."},
+ {k:"taste", name:"Taste and freshness", re:/\b(bland|salty|tasteless|stale|raw|undercooked|oily|greasy|too spicy|burnt|overcooked)\b/i,
+  tip:"Do a daily taste check on top sellers and watch oil use on fried dishes.",
+  reply:"Thank you for the feedback on the taste. We have passed it to our chefs and will keep refining the recipe."}
+];
+var SAFETY = /\b(hair|insect|bug|cockroach|worm|lizard|food poisoning|vomit\w*|sick|stomach|allerg\w+|plastic|glass)\b/i;
+var PRAISE = /\b(delicious|tasty|amazing|loved?|perfect|best|fresh|great|excellent|yummy)\b/i;
+var reviews = [];
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})}
+
+function parse(text){
+  return text.split(/\n+/).map(function(l){return l.trim()}).filter(Boolean).map(function(l,i){
+    var m=l.match(/^([1-5])\s*[|:\-]\s*(.*)$/), r=3, t=l;
+    if(m){r=+m[1];t=m[2]}
+    var themes=THEMES.filter(function(th){return th.re.test(t)});
+    return {id:i,rating:r,text:t,themes:themes,safety:SAFETY.test(t),praise:PRAISE.test(t)&&r>=4,done:false,draft:""};
+  });
+}
+
+function draftReply(rv,rest){
+  var name="Team "+rest;
+  if(rv.safety) return "";
+  if(rv.praise&&!rv.themes.length) return "Thank you so much for the kind words! We are delighted you enjoyed your meal and can’t wait to serve you again.\n\n— "+name;
+  if(!rv.themes.length) return "Thank you for your feedback. We read every review and will use yours to improve.\n\n— "+name;
+  var main=rv.themes[0].reply;
+  var extra=rv.themes.length>1?" We are also looking into "+rv.themes.slice(1).map(function(t){return t.name.toLowerCase()}).join(" and ")+".":"";
+  var open=rv.rating>=4?"Thank you for the lovely review! ":"";
+  return open+main+extra+"\n\n— "+name;
+}
+
+function analyse(){
+  var rest=document.getElementById("rest").value.trim()||"our kitchen";
+  reviews=parse(document.getElementById("revs").value);
+  reviews.forEach(function(r){r.draft=draftReply(r,rest)});
+  var stats=THEMES.map(function(th){
+    var hits=reviews.filter(function(r){return r.themes.indexOf(th)>-1&&r.rating<=3});
+    var sev=hits.reduce(function(a,r){return a+(6-r.rating)},0);
+    return {th:th,hits:hits,score:sev};
+  }).filter(function(s){return s.hits.length}).sort(function(a,b){return b.score-a.score}).slice(0,3);
+  var out=document.getElementById("out");
+  if(!reviews.length){out.innerHTML='<p class="empty">Add at least one review first.</p>';render();return}
+  var avg=(reviews.reduce(function(a,r){return a+r.rating},0)/reviews.length).toFixed(1);
+  var flagged=reviews.filter(function(r){return r.safety}).length;
+  var praised=reviews.filter(function(r){return r.praise}).length;
+  var h='<p class="digest"><b>'+reviews.length+' reviews, average '+avg+' stars.</b> ';
+  h+=stats.length?'Fixing “'+esc(stats[0].th.name.toLowerCase())+'” first has the biggest payoff.':'No repeated complaints found.';
+  h+='</p>';
+  var max=stats.length?stats[0].score:1;
+  stats.forEach(function(s){
+    var ra=(s.hits.reduce(function(a,r){return a+r.rating},0)/s.hits.length).toFixed(1);
+    h+='<div class="fix"><h3>'+esc(s.th.name)+'</h3><div class="meta">'+s.hits.length+' of '+reviews.length+' reviews mention it · those reviews average '+ra+' stars</div>'+
+       '<div class="bar" role="img" aria-label="Impact '+Math.round(s.score/max*100)+' percent of the top issue"><i style="width:'+Math.round(s.score/max*100)+'%"></i></div>'+
+       '<div>'+esc(s.th.tip)+'</div><div class="quote">“'+esc(s.hits[0].text)+'”</div></div>';
+  });
+  if(flagged) h+='<div class="flag">'+flagged+' review'+(flagged>1?'s need':' needs')+' your personal attention (possible food-safety issue). We did not draft a reply.</div>';
+  if(praised) h+='<div class="praise">'+praised+' customers praised your food. Thank them below.</div>';
+  out.innerHTML=h;
+  render();
+}
+
+var mode="need";
+function render(){
+  var box=document.getElementById("replies");
+  var list=reviews.filter(function(r){return mode==="all"||r.rating<=3||r.safety});
+  if(!reviews.length){return}
+  if(!list.length){box.innerHTML='<p class="empty">Nothing needs a reply right now.</p>';return}
+  box.innerHTML=list.map(function(r){
+    var tags=r.themes.map(function(t){return '<span class="tag">'+esc(t.name)+'</span>'}).join(" ");
+    var body=r.safety
+      ?'<div class="flag">Possible food-safety complaint. Please call or reply personally and check your kitchen log. No draft was written.</div>'
+      :'<label for="d'+r.id+'" class="meta" style="font-weight:500">Draft reply (edit freely)</label><textarea id="d'+r.id+'" data-id="'+r.id+'">'+esc(r.draft)+'</textarea><div class="row" style="margin-top:8px"><button data-ok="'+r.id+'" class="'+(r.done?'':'primary')+'">'+(r.done?'Approved, undo':'Approve and send')+'</button></div>';
+    return '<div class="rev'+(r.done?' done':'')+'"><div class="rv-head"><span class="stars">'+r.rating+' ★</span>'+tags+'</div><p class="rv-text">'+esc(r.text)+'</p>'+body+'</div>';
+  }).join("");
+}
+
+document.getElementById("replies").addEventListener("input",function(e){
+  if(e.target.dataset.id!==undefined){reviews[+e.target.dataset.id].draft=e.target.value}
+});
+document.getElementById("replies").addEventListener("click",function(e){
+  var id=e.target.getAttribute("data-ok");
+  if(id!==null){var r=reviews[+id];r.done=!r.done;render()}
+});
+function setMode(m){mode=m;document.getElementById("tab-need").setAttribute("aria-pressed",m==="need");document.getElementById("tab-all").setAttribute("aria-pressed",m==="all");render()}
+document.getElementById("tab-need").onclick=function(){setMode("need")};
+document.getElementById("tab-all").onclick=function(){setMode("all")};
+document.getElementById("go").onclick=analyse;
+document.getElementById("sample").onclick=function(){document.getElementById("revs").value=SAMPLE;analyse()};
+document.getElementById("revs").value=SAMPLE;
+analyse();
+</script>
+</body>
+</html>
